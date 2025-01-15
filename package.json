@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type":"module",
+  "type": "module",
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "bcrypt": "^5.1.1",
