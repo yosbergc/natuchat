@@ -19,7 +19,7 @@ await turso.execute(`CREATE TABLE IF NOT EXISTS users (
     user TEXT UNIQUE    
 )`)
 
-async function getMessages() {
+export async function getMessages() {
     try {
         const messages = await turso.execute("SELECT * from messages");
         return messages.rows
@@ -27,14 +27,14 @@ async function getMessages() {
         console.error(error)
     }
 }
-async function addMessage(message, user) {
+export async function addMessage(message, user) {
     const response = await turso.execute({
         sql: 'INSERT INTO messages (message, user) values (?, ?)',
         args: [message, user]
     });
     return response;
 }
-async function deleteMessage(id, user) {
+export async function deleteMessage(id, user) {
     try {
         const user = await turso.execute({
             sql: 'SELECT '
@@ -43,7 +43,7 @@ async function deleteMessage(id, user) {
         console.error(error )
     }
 }
-async function addUser(email, password, user) {
+export async function addUser(email, password, user) {
     try {
         const passwordEncrypted = await bcrypt.hash(password, 4)
         const response = await turso.execute({
@@ -56,7 +56,7 @@ async function addUser(email, password, user) {
     }
 }
 
-async function getUserById(id) {
+export async function getUserById(id) {
     try {
         const response = await turso.execute({
             sql: 'SELECT id, email, user FROM users WHERE id = ?',
