@@ -2,7 +2,7 @@ import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import cors from 'cors'
-import { turso } from './models/mysql.js';
+import { getMessages, addMessage, getMessage } from './models/mysql.js';
 const PORT = process.env.PORT || 5000;
 
 const app = express()
@@ -18,16 +18,17 @@ const io = new Server(server, {
     }
 })
 
-io.on('connection', (socket) => {
-    console.log('user connected')
-    console.log(socket) 
-    io.emit('connection', 'Mi calol')
-    socket.on('disconnect', () => {
-        console.log('user disconnected')
+io.on('connection', async (socket) => {
+    socket.on('chat message', async (message) => {
+        const response = await addMessage(message, socket.handshake.auth.user)
+        const messageFromDb = await getMessage(response.lastInsertRowid)
+        io.emit('chat message', messageFromDb)
     })
-    socket.on('chat message', (message) => {
-        console.log(message)
-    })
+
+    if (!socket.recovered) {
+        const mensajes = await getMessages()
+        io.emit('initial chat', mensajes)
+    }
 })
 
 app.get('/', (req, res) => {

@@ -21,7 +21,7 @@ await turso.execute(`CREATE TABLE IF NOT EXISTS users (
 
 export async function getMessages() {
     try {
-        const messages = await turso.execute("SELECT * from messages");
+        const messages = await turso.execute("SELECT * FROM messages");
         return messages.rows
     } catch(error) {
         console.error(error)
@@ -67,3 +67,15 @@ export async function getUserById(id) {
         console.error(error)
     }
 }
+export async function getMessage(id) {
+    try {
+        const response = await turso.execute({
+            sql: 'SELECT * from messages WHERE id = ?',
+            args: [id]
+        })
+        return response.rows[0];
+    } catch (error) {
+        console.error(error)
+    }
+}
+getMessage(4)
