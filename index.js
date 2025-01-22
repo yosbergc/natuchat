@@ -14,7 +14,7 @@ app.use(express.json())
 const server = createServer(app)
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: 'https://natuchat-frontend.vercel.app',
         methods: ['GET', 'POST'],
         allowedHeaders: ['Content-Type']
     }
