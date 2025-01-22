@@ -64,14 +64,12 @@ router.post('/register', async (req, res) => {
 
         await addUser(email, password, user)
 
-        res.send('Registro exitoso.')
+        res.json({
+            message: 'Registro exitoso.'
+        })
     } catch (error) {
         console.error(error)
     }
-
-    
-
-
 })
 
 export { router }
