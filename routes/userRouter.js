@@ -1,7 +1,7 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { getUserByUsername } from '../models/mysql.js'
+import { getUserByUsername, getUserByEmail, addUser } from '../models/mysql.js'
 import dotenv from 'dotenv'
 dotenv.config()
 const router = express.Router()
@@ -53,10 +53,18 @@ router.post('/register', async (req, res) => {
         const userFound = await getUserByUsername(user)
 
         if (userFound) {
-            return res.status(400).send('El usuario con el que te estas intentando registrar ya existe, por favor, trata con otro.')
+            return res.status(400).send('El usuario con el que estás intentando registrarte ya existe, por favor intenta con otro.')
         }
 
-        
+        const userFoundByEmail = await getUserByEmail(email)
+
+        if (userFoundByEmail) {
+            return res.status(400).send('El email con el que estás intentando registrarte ya existe, por favor intenta con otro.')
+        }
+
+        await addUser(email, password, user)
+
+        res.send('Registro exitoso.')
     } catch (error) {
         console.error(error)
     }
