@@ -1,8 +1,10 @@
 import express from 'express'
 import { createServer } from 'node:http'
 import { Server } from 'socket.io'
+
 import cors from 'cors'
 import { getMessages, addMessage, getMessage } from './models/mysql.js';
+import { router } from './routes/userRouter.js';
 const PORT = process.env.PORT || 5000;
 
 const app = express()
@@ -34,4 +36,7 @@ io.on('connection', async (socket) => {
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
+
+app.use('/auth', router)
+
 server.listen(PORT)

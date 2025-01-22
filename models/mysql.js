@@ -14,9 +14,9 @@ await turso.execute(`CREATE TABLE IF NOT EXISTS messages (
 )`)
 await turso.execute(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    user TEXT UNIQUE    
+    user TEXT UNIQUE
 )`)
 
 export async function getMessages() {
@@ -78,4 +78,26 @@ export async function getMessage(id) {
         console.error(error)
     }
 }
-getMessage(4)
+export async function getUserByUsername(username) {
+    try {
+        const response = await turso.execute({
+            sql: 'SELECT * from users WHERE user = ?',
+            args: [username]
+        })
+        return response.rows[0];
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export async function getUserByEmail(email) {
+    try {
+        const response = await turso.execute({
+            sql:'SELECT * from users WHERE email = ?',
+            args: [email]
+        })
+        return response.rows[0]
+    } catch (error) {
+        console.error
+    }
+}
